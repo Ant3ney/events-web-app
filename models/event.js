@@ -3,37 +3,46 @@ const mongoose = require('mongoose');
 const eventSchema = new mongoose.Schema({
     name: {
         type: String,
+        required:[true,'name is required']
     },
     addressLine_1: {
         type: String,
+        required:[true,'addressLine_1 is required']
     },
     addressLine_2: {
         type: String,
-    },
-    addressLine_3: {
-        type: String,
+        default:''
     },
     region: {
         type: String,
+        required:[true,'region is required']
     },
     city: {
         type: String,
+        required:[true,'city is required']
     },
     postCode: {
         type: String,
+        required:[true,'postCode is required']
     },
     eventStartDate:{
-        type: String
+        type: String,
+        required:[true,'eventStartDate is required']
     },
     eventEndDate:{
-        type : Date,
+        type : String,
+        required:[true,'eventEndDate is required']
+    },
+    notes:{
+        type : String,
+        required:[true,'notes is required']
     },
     status:{
-        type : Number
+        type : String,
     },
-    apiKey:{
+    api_key:{
         type : String
-    }
+    },
 },{ timestamps: { createdAt: 'createdAt' }  })
 
 

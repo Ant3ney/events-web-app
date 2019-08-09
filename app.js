@@ -12,6 +12,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //route file 
 app.use('/api',apiRouter)
 
+app.use(express.static('public'))
+
 //run app
 db.connectDb(constant.DATABASE_URL).then(async () => {
     app.listen(constant.PORT, () =>{
