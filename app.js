@@ -14,7 +14,7 @@ app.use('/api',apiRouter)
 
 //run app
 db.connectDb(constant.DATABASE_URL).then(async () => {
-    app.listen(process.env.PORT, () =>{
+    app.listen(constant.PORT, () =>{
             console.log(`🚀  App started on ${constant.PORT}!`)
         }
     )

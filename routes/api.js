@@ -13,9 +13,7 @@ const auth = function (req, res, next) {
         "1f666199-f09a-48ca-b96d-3b96763fd2d7"
     ]
     if (!token && api_keys.findIndex(token) == -1) {
-        return res.json({
-            statusCode:401,
-            contest:{},
+        return res.status(401).json({
             message: 'unAuthorized'
         });
     }
@@ -32,15 +30,23 @@ const auth = function (req, res, next) {
 
         //if invalid token
         console.log(ex)
-        return res.json({
-            statusCode:401,
-            contest:ex,
+        return res.status(401).json({
             message: 'unAuthorized'
         });
 
     }
 
 }
+// list event
+router.get('/event',controller.event.get)
+// add event
+router.post('/event',controller.event.insert)
+// update event
+router.put('/event/:id',controller.event.update)
+// delete event
+router.delete('/event/:id',controller.event.delete)
+// confirm person to event
+router.post('/event/confirm/:user_id',controller.event.userConfirm);
 
 module.exports = router;
 
