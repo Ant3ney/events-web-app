@@ -1,0 +1,27 @@
+{
+  "name": "chat-web-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/windswept321/events-web-app.git"
+  },
+  "author": "Yash2301",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/windswept321/events-web-app/issues"
+  },
+  "homepage": "https://github.com/windswept321/events-web-app#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.1.1",
+    "moment": "^2.24.0",
+    "mongoose": "^5.6.9",
+    "nodemailer": "^6.3.0"
+  }
+}
