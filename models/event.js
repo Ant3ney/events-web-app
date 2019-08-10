@@ -26,16 +26,15 @@ const eventSchema = new mongoose.Schema({
         required:[true,'postCode is required']
     },
     eventStartDate:{
-        type: String,
+        type: Date,
         required:[true,'eventStartDate is required']
     },
     eventEndDate:{
-        type : String,
+        type : Date,
         required:[true,'eventEndDate is required']
     },
     notes:{
         type : String,
-        required:[true,'notes is required']
     },
     status:{
         type : String,

@@ -105,9 +105,28 @@ router.post('/event',[
         check('region').exists().withMessage('region is required field'),
         check('city').exists().withMessage('city is required field'),
         check('postCode').exists().withMessage('postCode is required field'),
-        check('eventStartDate').exists().withMessage('eventStartDate is required field'),
-        check('eventEndDate').exists().withMessage('eventEndDate is required field'),
-        check('notes').exists().withMessage('notes is required field'),
+        check('eventStartDate')
+                    .exists()
+                    .withMessage('eventStartDate is required field')
+                    .custom(function(value,{req,res}) {
+                        var startDate = Date.parse(value, "yyyy-MM-dd HH:mm:ss");
+                        if (startDate) {
+                            req.body.eventStartDate = startDate
+                            return true;
+                        } else {
+                            return Promise.reject('eventStartDate must be in correct format yyyy-mm-dd hh:mm:ss')
+                        }
+                    }),
+        check('eventEndDate').exists().withMessage('eventEndDate is required field')
+                    .custom(function(value,{req,res}) {
+                        var startDate = Date.parse(value, "yyyy-MM-dd HH:mm:ss");
+                        if (startDate) {
+                            req.body.eventEndDate = startDate
+                            return true;
+                        } else {
+                            return Promise.reject('eventEndDate must be in correct format yyyy-mm-dd hh:mm:ss')
+                        }
+                    }),
     ],controller.event.insert)
 
 /**

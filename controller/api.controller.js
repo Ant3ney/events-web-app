@@ -4,6 +4,7 @@ const ObjectId = mongoose.Types.ObjectId;
 const user = require('./../models/user')
 const eventModel = require('./../models/event')
 const { validationResult } = require('express-validator');
+const moment = require('moment');
 
 const nodemailer = require("nodemailer");
 async function send_mail(sender,subject,html){
@@ -49,7 +50,7 @@ const apiController = {
 
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
-                return res.status(422).json({ errors: errors.array() });
+                return res.status(422).json({ errors: errors.array()[0].msg });
             }
             var {
                 name,
@@ -153,7 +154,6 @@ const apiController = {
                     }
                 })
             }).catch(function(err){
-                console.log(err)
                 return res.status(404).json({
                     message:'Event not found'
                 })
@@ -161,7 +161,11 @@ const apiController = {
         },
         delete:function (req,res) {
             const filter = {_id:req.params.id}
-            eventModel.deleteOne(filter).then(function(data){
+            eventModel.find(filter).then(function(event){
+                if (event.length > 0) {
+                    return Promise.reject('Event not found');
+                }
+                event[0].remove();
                 return res.status(200).json({
                     message:'success'
                 })
