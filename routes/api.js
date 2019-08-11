@@ -109,23 +109,22 @@ router.post('/event',[
                     .exists()
                     .withMessage('eventStartDate is required field')
                     .custom(function(value,{req,res}) {
-                        var startDate = Date.parse(value, "yyyy-MM-dd HH:mm:ss");
-                        if (startDate) {
-                            req.body.eventStartDate = startDate
+                        var pattern = new RegExp("^(3[01]|[12][0-9]|0[1-9])/(1[0-2]|0[1-9])/[0-9]{4} (2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9])$");
+                        if (value.search(pattern)===0){
                             return true;
-                        } else {
-                            return Promise.reject('eventStartDate must be in correct format yyyy-mm-dd hh:mm:ss')
                         }
+                        return Promise.reject('eventStartDate must be in correct format dd/mm/yyyy hh:mm:ss')
                     }),
         check('eventEndDate').exists().withMessage('eventEndDate is required field')
                     .custom(function(value,{req,res}) {
-                        var startDate = Date.parse(value, "yyyy-MM-dd HH:mm:ss");
-                        if (startDate) {
-                            req.body.eventEndDate = startDate
-                            return true;
-                        } else {
-                            return Promise.reject('eventEndDate must be in correct format yyyy-mm-dd hh:mm:ss')
+                        var pattern = new RegExp("^(3[01]|[12][0-9]|0[1-9])/(1[0-2]|0[1-9])/[0-9]{4} (2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9])$");
+                        var endDate = Date.parse(value, "dd/mm/yyyy hh:mm:ss");
+                        if (value.search(pattern)===0){
+                            return true
+                        }else if (endDate < req.body.eventStartDate) {
+                            return Promise.reject('EndDate must be bigger than start Date ')
                         }
+                        return Promise.reject('eventEndDate must be in correct format dd/mm/yyyy hh:mm:ss')
                     }),
     ],controller.event.insert)
 

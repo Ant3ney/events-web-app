@@ -3,6 +3,7 @@ const db = require('./models/index')
 const apiRouter = require('./routes/api')
 const bodyParser = require('body-parser')
 constant = require('./constant')
+const path = require('path')
 
 const app = express();
 
@@ -11,6 +12,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //route file 
 app.use('/api',apiRouter)
+
+app.set("views",path.join(__dirname,"views"))
+app.set("view engine","hbs")
 
 app.use(express.static('public'))
 
