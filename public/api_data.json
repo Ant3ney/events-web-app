@@ -79,6 +79,13 @@
           },
           {
             "group": "Parameter",
+            "type": "addressLine_2",
+            "optional": true,
+            "field": "addressLine_2",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
             "type": "region",
             "optional": false,
             "field": "region",
@@ -115,7 +122,7 @@
           {
             "group": "Parameter",
             "type": "notes",
-            "optional": false,
+            "optional": true,
             "field": "notes",
             "description": ""
           }

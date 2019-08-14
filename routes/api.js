@@ -71,13 +71,13 @@ router.get('/event',controller.event.get)
  * @apiGroup Event
  * @apiParam {name} name
  * @apiParam {addressLine_1} addressLine_1
-  * @apiParam {addressLine_2} addressLine_2(optional)
+ * @apiParam {addressLine_2} addressLine_2
  * @apiParam {region} region
  * @apiParam {city} city
  * @apiParam {postCode} postCode
  * @apiParam {eventStartDate} eventStartDate
  * @apiParam {eventEndDate} eventEndDate
- * @apiParam {notes} notes(optional)
+ * @apiParam {notes} notes
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {

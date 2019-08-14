@@ -4,9 +4,6 @@ const router = express.Router();
 const { check } = require('express-validator');
 const moment = require('moment');
 
-router.get('/event/',controller.eventList)
+router.get('/event/', controller.eventList)
 
 module.exports = router;
-
-
-

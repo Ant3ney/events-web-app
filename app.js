@@ -38,3 +38,16 @@ db.connectDb(constant.DATABASE_URL).then(async () => {
     )
 });
 
+const gulp = require('gulp');
+const apidoc = require('gulp-api-doc');
+ 
+gulp.task('doc', () => {
+    return gulp.src('routes')
+        .pipe(apidoc())
+        .pipe(gulp.dest('documentation'));
+});
+gulp.task('doc', () => {
+    return gulp.src(['routes/api.js'])
+        .pipe(apidoc({markdown: false}))
+        .pipe(gulp.dest('documentation'));
+});

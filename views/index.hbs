@@ -11,7 +11,7 @@
 			</hr>
 				<ul class="event-list">
 				{{#each events}}
-					<li>
+					<li data-link="details/events/{{ this._id }}" >
 						<time datetime="2014-07-20">
 							<span class="day">{{this.stratDate}}</span>
 							<span class="month">{{this.startMonth}}</span>
@@ -24,6 +24,9 @@
 						</div>
 					</li>
 				{{/each}}
+				{{#unless events.length }}
+					<p>No any event available</p>
+				{{/unless}}
 				</ul>
 			</div>
 		</div>
