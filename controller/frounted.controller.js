@@ -17,7 +17,10 @@ const frountedController = {
             events[i].startYear = moment(events[i].eventStartDate, "dd/mm/yyyy hh:mm:ss").format('YYYY')
         }
         res.render('index', { events: events, layout: null });
-
+    },
+    eventDetails: async function(req, res, next) {
+        var event = await eventModel.findOne({ _id: req.params.id });
+        res.render('details', { layout: null, event: event })
     }
 }
 

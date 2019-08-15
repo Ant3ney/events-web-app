@@ -11,7 +11,7 @@
 			</hr>
 				<ul class="event-list">
 				{{#each events}}
-					<li data-link="details/events/{{ this._id }}" >
+					<li>
 						<time datetime="2014-07-20">
 							<span class="day">{{this.stratDate}}</span>
 							<span class="month">{{this.startMonth}}</span>
@@ -19,7 +19,7 @@
 							<span class="time">ALL DAY</span>
 						</time>
 						<div class="info">
-							<h2 class="title">{{this.name}}</h2>
+							<a href="details/events/{{ this._id }}" ><h2 class="title">{{this.name}}</h2></a>
 							<p class="desc">{{this.city}} - {{this.postCode}}</p>
 						</div>
 					</li>

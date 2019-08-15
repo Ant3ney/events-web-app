@@ -4,7 +4,7 @@ const router = express.Router();
 const { check } = require('express-validator');
 const moment = require('moment');
 
-const auth = function (req, res, next) {
+const auth = function(req, res, next) {
 
     //get the token from the header if present
     const token = req.headers.token;
@@ -23,7 +23,7 @@ const auth = function (req, res, next) {
 
 }
 router.use(auth)
-// list event
+    // list event
 
 /**
  * @api {get} /events List all Event
@@ -63,7 +63,7 @@ router.use(auth)
  * @apiErrorExample {json} List error
  *    HTTP/1.1 500 Internal Server Error
  */
-router.get('/event',controller.event.get)
+router.get('/event', controller.event.get)
 
 
 /**
@@ -98,35 +98,35 @@ router.get('/event',controller.event.get)
  * @apiErrorExample {json} List error
  *    HTTP/1.1 500 Internal Server Error
  */
-router.post('/event',[
-        //validation
-        check('name').exists().withMessage('name is required field'),
-        check('addressLine_1').exists().withMessage('addressLine_1 is required field'),
-        check('region').exists().withMessage('region is required field'),
-        check('city').exists().withMessage('city is required field'),
-        check('postCode').exists().withMessage('postCode is required field'),
-        check('eventStartDate')
-                    .exists()
-                    .withMessage('eventStartDate is required field')
-                    .custom(function(value,{req,res}) {
-                        var pattern = new RegExp("^(3[01]|[12][0-9]|0[1-9])/(1[0-2]|0[1-9])/[0-9]{4} (2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9])$");
-                        if (value.search(pattern)===0){
-                            return true;
-                        }
-                        return Promise.reject('eventStartDate must be in correct format dd/mm/yyyy hh:mm:ss')
-                    }),
-        check('eventEndDate').exists().withMessage('eventEndDate is required field')
-                    .custom(function(value,{req,res}) {
-                        var pattern = new RegExp("^(3[01]|[12][0-9]|0[1-9])/(1[0-2]|0[1-9])/[0-9]{4} (2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9])$");
-                        var endDate = Date.parse(value, "dd/mm/yyyy hh:mm:ss");
-                        if (value.search(pattern)===0){
-                            return true
-                        }else if (endDate < req.body.eventStartDate) {
-                            return Promise.reject('EndDate must be bigger than start Date ')
-                        }
-                        return Promise.reject('eventEndDate must be in correct format dd/mm/yyyy hh:mm:ss')
-                    }),
-    ],controller.event.insert)
+router.post('/event', [
+    //validation
+    check('name').exists().withMessage('name is required field'),
+    check('addressLine_1').exists().withMessage('addressLine_1 is required field'),
+    check('region').exists().withMessage('region is required field'),
+    check('city').exists().withMessage('city is required field'),
+    check('postCode').exists().withMessage('postCode is required field'),
+    check('eventStartDate')
+    .exists()
+    .withMessage('eventStartDate is required field')
+    .custom(function(value, { req, res }) {
+        var pattern = new RegExp("^(3[01]|[12][0-9]|0[1-9])/(1[0-2]|0[1-9])/[0-9]{4} (2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9])$");
+        if (value.search(pattern) === 0) {
+            return true;
+        }
+        return Promise.reject('eventStartDate must be in correct format dd/mm/yyyy hh:mm:ss')
+    }),
+    check('eventEndDate').exists().withMessage('eventEndDate is required field')
+    .custom(function(value, { req, res }) {
+        var pattern = new RegExp("^(3[01]|[12][0-9]|0[1-9])/(1[0-2]|0[1-9])/[0-9]{4} (2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9])$");
+        var endDate = Date.parse(value, "dd/mm/yyyy hh:mm:ss");
+        if (value.search(pattern) === 0) {
+            return true
+        } else if (endDate < req.body.eventStartDate) {
+            return Promise.reject('EndDate must be bigger than start Date ')
+        }
+        return Promise.reject('eventEndDate must be in correct format dd/mm/yyyy hh:mm:ss')
+    }),
+], controller.event.insert)
 
 /**
  * @api {put} /event/:id update a event
@@ -160,7 +160,7 @@ router.post('/event',[
  * @apiErrorExample {json} Update error
  *    HTTP/1.1 500 Internal Server Error
  */
-router.put('/event/:id',controller.event.update)
+router.put('/event/:id', controller.event.update)
 
 
 /**
@@ -174,9 +174,6 @@ router.put('/event/:id',controller.event.update)
  * @apiErrorExample {json} Delete error
  *    HTTP/1.1 500 Internal Server Error
  */
-router.delete('/event/:id',controller.event.delete)
+router.delete('/event/:id', controller.event.delete)
 
 module.exports = router;
-
-
-
