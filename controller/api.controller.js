@@ -6,30 +6,7 @@ const eventModel = require('./../models/event')
 const { validationResult } = require('express-validator');
 const moment = require('moment');
 
-const nodemailer = require("nodemailer");
-async function send_mail(sender,subject,html){
-    let testAccount = await nodemailer.createTestAccount();
-    let transporter = nodemailer.createTransport({
-        host: "",
-        port: 587,
-        secure: false, // true for 465, false for other ports
-        auth: {
-            user: "", // generated ethereal user
-            pass: "" // generated ethereal password
-        },
-        tls: {
-            rejectUnauthorized: false
-        }
-    });
-    let info = await transporter.sendMail({
-        // from: process.env.ADMIN_EMAIL_FROM, // sender address
-        from: '', // sender address
-        to: sender, // list of receivers
-        subject: subject, // Subject line
-        html: html // html body
-    })
-    console.log(info);
-}
+const agenda = require('./../jobs/agenda');
 
 const apiController = {
     event:{
@@ -47,10 +24,14 @@ const apiController = {
             });
         },
         insert:function(req,res){
+            var eventStartDate = moment(req.body.eventStartDate,'DD/MM/YYYY hh:mm:ss');
+            var eventEndDate = moment(req.body.eventEndDate,'DD/MM/YYYY hh:mm:ss');
 
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return res.status(422).json({ errors: errors.array()[0].msg });
+            }else if (eventStartDate > eventEndDate) {
+                return res.status(422).json({ errors: 'EndDate must be bigger than start Date' });
             }
             var {
                 name,
@@ -59,8 +40,6 @@ const apiController = {
                 region,
                 city,
                 postCode,
-                eventStartDate,
-                eventEndDate,
                 notes,
                 status
             } = req.body;
@@ -80,6 +59,12 @@ const apiController = {
             eventData.api_key = req.user.auth_key;
 
             eventModel.create(eventData).then(function(data){
+                
+                agenda.schedule(moment(eventEndDate).format('YYYY-MM-DD HH:mm:ss'),'removeEvent',{
+                    _id:data._id,
+                    eventEndDate:eventEndDate
+                });
+
                 var {
                     _id,
                     name,
@@ -108,6 +93,7 @@ const apiController = {
                         status
                     }
                 })
+                
             }).catch(function(err){
                 console.log(err);
                 var obj = err.errors[Object.keys(err.errors)[0]];
@@ -138,6 +124,10 @@ const apiController = {
                     notes,
                     status
                 } = data;
+                agenda.schedule(moment(eventEndDate).format('YYYY-MM-DD HH:mm:ss'),'removeEvent',{
+                    _id:data._id,
+                    eventEndDate:eventEndDate
+                });
                 return res.status(200).json({
                     event:{
                         _id,
