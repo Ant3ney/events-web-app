@@ -26,6 +26,14 @@
 				{{ event.region }}<br>
 				{{ event.city }} - {{ event.postCode }}<br>
 				<br>
+				<b>Gallary :</b>
+				<br>
+				<br>
+				<div class="row" >
+					{{#each event.images}}
+						<img src="{{ this.filename }}" style="padding:15px;height: 200px;width:200px" />
+					{{/each}}
+				</div>
 			</div>
 		</div>
 	</div>

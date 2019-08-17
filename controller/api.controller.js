@@ -1,13 +1,12 @@
 //load models
 const mongoose =  require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
-const user = require('./../models/user')
 const eventModel = require('./../models/event')
 const { validationResult } = require('express-validator');
 const moment = require('moment');
-
+const eventImagesModel = require('./../models/eventImages')
 const agenda = require('./../jobs/agenda');
-
+const constant = require('./../constant')
 const apiController = {
     event:{
         
@@ -160,14 +159,60 @@ const apiController = {
                     message:'success'
                 })
             }).catch(function(err){
-                console.log(err)
                 return res.status(404).json({
                     message:'Event not found'
                 })
             }); 
         },
-        userConfirm:function(req,res){
+        addImage:function(req,res){
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(422).json({ errors: errors.array()[0].msg });
+            }
+
+            var eventImagesObj = new eventImagesModel;
+            eventImagesObj.eventId = req.body.eventId;
+            eventImagesObj.originalname = req.file.originalname;
+            eventImagesObj.filename = req.file.filename;
+            eventImagesObj.mimetype = req.file.mimetype;
+            eventImagesObj.size = req.file.size;
+            eventImagesObj.save();
+            return res.status(200).json({
+                imageId:eventImagesObj._id,
+                imagePath:constant.BASE_URL + '/' + constant.EVENT_FILE_PATH + '/' +req.file.filename
+            })
+        },
+        removeImage:function (req,res) {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(422).json({ errors: errors.array()[0].msg });
+            }
+            var eventImagesObj = eventImagesModel.find({'id':req.body.imageId}).delete();
             
+            return res.status(200).json({
+                 message:'success'
+            })
+        },
+        getAllImages:async function(req,res) {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(422).json({ errors: errors.array()[0].msg });
+            }
+            var eventImagesObj = await eventImagesModel.find({'eventId':req.body.eventId})
+
+            var responce = []
+
+            for (let i = 0; i < eventImagesObj.length; i++) {
+                const element = eventImagesObj[i];
+                responce.push({
+                    imageId:element._id,
+                    imagePath:constant.BASE_URL + '/' + constant.EVENT_FILE_PATH + '/' + element.filename
+                });
+            }
+            
+            return res.status(200).json({
+                images:responce   
+            })
         }
     }
 }

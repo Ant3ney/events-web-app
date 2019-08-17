@@ -4,13 +4,14 @@ const ObjectId = mongoose.Types.ObjectId;
 const user = require('./../models/user')
 const eventModel = require('./../models/event')
 const { validationResult } = require('express-validator');
+const eventImagesModel = require('./../models/eventImages')
 const moment = require('moment');
 
 const nodemailer = require("nodemailer");
 
 const frountedController = {
     eventList: async function(req, res, next) {
-        var events = await eventModel.find()
+        var events = await eventModel.find().sort({createdAt:'-1'})
         for (var i = 0; i < events.length; i++) {
             events[i].stratDate = moment(events[i].eventStartDate).format('DD')
             events[i].startMonth = moment(events[i].eventStartDate).format('MMM')
@@ -32,7 +33,13 @@ const frountedController = {
         eventObj.eventStartDate = moment(event.eventStartDate).format('MMMM Do YYYY, hh:mm:ss a')
         eventObj.eventEndDate = moment(event.eventEndDate).format('MMMM Do YYYY, hh:mm:ss a')
         
-        res.render('details', { layout: null, event: eventObj })
+        eventObj.images = await eventImagesModel.find({'eventId':eventObj._id})
+        
+        await eventObj.images.forEach(function(item){
+            item.filename = constant.BASE_URL + '/' + constant.EVENT_FILE_PATH + '/' + item.filename
+        })
+
+        res.render('details', { layout: null, event: eventObj,constant:constant })
     }
 }
 

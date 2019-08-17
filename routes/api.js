@@ -3,6 +3,7 @@ const controller = require('../controller/api.controller')
 const router = express.Router();
 const { check } = require('express-validator');
 const moment = require('moment');
+const eventModel = require('./../models/event')
 
 const auth = function(req, res, next) {
 
@@ -172,5 +173,50 @@ router.put('/event/:id', controller.event.update)
  *    HTTP/1.1 500 Internal Server Error
  */
 router.delete('/event/:id', controller.event.delete)
+
+var multer  = require('multer')
+var upload = multer({ dest: 'public/uploads/' })
+
+router.post('/event/images', [
+                upload.single('image'),
+                check('eventId').exists().withMessage('EventId is Required Field').custom(async function(value){
+                    try {
+                        var data = await eventModel.findById(value);
+                        if (data.length == 0) {
+                            // not found error
+                            return Promise.reject('eventId is invalid')
+                        }
+                    } catch (error) {
+                        return Promise.reject('eventId is invalid')
+                    }
+                    return true;
+                }),
+            ],controller.event.addImage)
+
+router.delete('/event/images', [check('imageId').exists().withMessage('imageId is Required Field').custom(async function(value){
+    try {
+        var data = await eventModel.findById(value);
+        if (data.length == 0) {
+            // not found error
+            return Promise.reject('imageId is invalid')
+        }
+    } catch (error) {
+        return Promise.reject('imageId is invalid')
+    }
+    return true;
+})],controller.event.removeImage)
+
+router.get('/event/images', [check('eventId').exists().withMessage('eventId is Required Field').custom(async function(value){
+    try {
+        var data = await eventModel.findById(value);
+        if (data.length == 0) {
+            // not found error
+            return Promise.reject('eventId is invalid')
+        }
+    } catch (error) {
+        return Promise.reject('eventId is invalid')
+    }
+    return true;
+})],controller.event.getAllImages)
 
 module.exports = router;
