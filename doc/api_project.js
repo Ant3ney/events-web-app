@@ -1,5 +1,5 @@
 define({
-  "name": "chat-web-app",
+  "name": "MyAppName",
   "version": "1.0.0",
   "description": "",
   "sampleUrl": false,
@@ -7,7 +7,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2019-08-09T22:30:52.074Z",
+    "time": "2019-08-18T00:12:47.351Z",
     "url": "http://apidocjs.com",
     "version": "0.17.7"
   }

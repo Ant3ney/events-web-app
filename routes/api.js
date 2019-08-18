@@ -72,13 +72,13 @@ router.get('/event', controller.event.get)
  * @apiGroup Event
  * @apiParam {name} name
  * @apiParam {addressLine_1} addressLine_1
- * @apiParam {addressLine_2} addressLine_2
+ * @apiParam {addressLine_2} addressLine_2 this is optional field
  * @apiParam {region} region
- * @apiParam {city} city
+ * @apiParam {city} city 
  * @apiParam {postCode} postCode
  * @apiParam {eventStartDate} eventStartDate
- * @apiParam {eventEndDate} eventEndDate
- * @apiParam {notes} notes
+ * @apiParam {eventEndDate} eventEndDate 
+ * @apiParam {notes} notes this is optional field
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  *    {
@@ -176,7 +176,20 @@ router.delete('/event/:id', controller.event.delete)
 
 var multer  = require('multer')
 var upload = multer({ dest: 'public/uploads/' })
-
+/**
+ * @api {post} /event/images Add Images to Event
+ * @apiGroup Event
+ * @apiParam {image} form-data add single file object
+ * @apiParam {eventId} event id  
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 
+     {
+        imageId:"5d54a649b2976426a30ce964s",
+        imagePath:"image url"
+    }
+ * @apiErrorExample {json} Delete error
+ *    HTTP/1.1 500 Internal Server Error
+ */
 router.post('/event/images', [
                 upload.single('image'),
                 check('eventId').exists().withMessage('EventId is Required Field').custom(async function(value){
@@ -192,7 +205,16 @@ router.post('/event/images', [
                     return true;
                 }),
             ],controller.event.addImage)
-
+/**
+ * @api {delete} /event/images remove Images to Event
+ * @apiGroup Event
+ * @apiParam {imageId} imageId for uniq image
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 
+     {
+        message:"success"
+    }
+ */
 router.delete('/event/images', [check('imageId').exists().withMessage('imageId is Required Field').custom(async function(value){
     try {
         var data = await eventModel.findById(value);
@@ -205,7 +227,20 @@ router.delete('/event/images', [check('imageId').exists().withMessage('imageId i
     }
     return true;
 })],controller.event.removeImage)
-
+/**
+ * @api {get} /event/images get Images to Event
+ * @apiGroup Event
+ * @apiParam {eventId} eventid
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 
+     [{
+        imageId:"5d54a649b2976426a30ce964s",
+        imagePath:"image url"
+    },{
+        imageId:"5d54a649b2976426a30ce964s",
+        imagePath:"image url"
+    }]
+ */
 router.get('/event/images', [check('eventId').exists().withMessage('eventId is Required Field').custom(async function(value){
     try {
         var data = await eventModel.findById(value);

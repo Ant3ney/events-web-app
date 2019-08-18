@@ -1,4 +1,4 @@
-define({ "api": [
+[
   {
     "type": "delete",
     "url": "/event/:id",
@@ -23,9 +23,73 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./routes/api.js",
+    "filename": "routes/api.js",
     "groupTitle": "Event",
     "name": "DeleteEventId"
+  },
+  {
+    "type": "delete",
+    "url": "/event/images",
+    "title": "remove Images to Event",
+    "group": "Event",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "imageId",
+            "optional": false,
+            "field": "imageId",
+            "description": "<p>for uniq image</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 \n  {\n     message:\"success\"\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.js",
+    "groupTitle": "Event",
+    "name": "DeleteEventImages"
+  },
+  {
+    "type": "get",
+    "url": "/event/images",
+    "title": "get Images to Event",
+    "group": "Event",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "eventId",
+            "optional": false,
+            "field": "eventid",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 \n  [{\n     imageId:\"5d54a649b2976426a30ce964s\",\n     imagePath:\"image url\"\n },{\n     imageId:\"5d54a649b2976426a30ce964s\",\n     imagePath:\"image url\"\n }]",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.js",
+    "groupTitle": "Event",
+    "name": "GetEventImages"
   },
   {
     "type": "get",
@@ -51,7 +115,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./routes/api.js",
+    "filename": "routes/api.js",
     "groupTitle": "Event",
     "name": "GetEvents"
   },
@@ -76,6 +140,13 @@ define({ "api": [
             "optional": false,
             "field": "addressLine_1",
             "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "addressLine_2",
+            "optional": false,
+            "field": "addressLine_2",
+            "description": "<p>this is optional field</p>"
           },
           {
             "group": "Parameter",
@@ -117,7 +188,7 @@ define({ "api": [
             "type": "notes",
             "optional": false,
             "field": "notes",
-            "description": ""
+            "description": "<p>this is optional field</p>"
           }
         ]
       }
@@ -141,9 +212,57 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./routes/api.js",
+    "filename": "routes/api.js",
     "groupTitle": "Event",
     "name": "PostEvent"
+  },
+  {
+    "type": "post",
+    "url": "/event/images",
+    "title": "Add Images to Event",
+    "group": "Event",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "image",
+            "optional": false,
+            "field": "form-data",
+            "description": "<p>add single file object</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "eventId",
+            "optional": false,
+            "field": "event",
+            "description": "<p>id</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 \n  {\n     imageId:\"5d54a649b2976426a30ce964s\",\n     imagePath:\"image url\"\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Delete error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.js",
+    "groupTitle": "Event",
+    "name": "PostEventImages"
   },
   {
     "type": "put",
@@ -165,6 +284,13 @@ define({ "api": [
             "type": "addressLine_1",
             "optional": false,
             "field": "addressLine_1",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "addressLine_2",
+            "optional": false,
+            "field": "addressLine_2",
             "description": ""
           },
           {
@@ -231,8 +357,8 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "./routes/api.js",
+    "filename": "routes/api.js",
     "groupTitle": "Event",
     "name": "PutEventId"
   }
-] });
+]
