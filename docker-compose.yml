@@ -1,0 +1,18 @@
+version: '3.5'
+services:
+
+  database:
+    image: mongo:3.4.22-xenial
+    restart: always
+
+  app:
+    image: node
+    command: ['/bin/sh', '-c', 'cd /home/node/events-app ; npm run start']
+    volumes:
+      - ./:/home/node/events-app
+    depends_on:
+      - database
+    ports:
+      - 3005:3005
+    environment:
+      GOOGLE_API_KEY: AIzaSyC0_l5ksKZqXqyXibY0AWsR86qJJPaRt_k

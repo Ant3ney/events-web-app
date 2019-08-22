@@ -44,7 +44,6 @@ const eventSchema = new mongoose.Schema({
     },
 },{ timestamps: { createdAt: 'createdAt' }  })
 
-
 const event = mongoose.model('Event', eventSchema)
 
 module.exports = event

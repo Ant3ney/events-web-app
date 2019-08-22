@@ -2,24 +2,69 @@
 <link href="/css/custom.css" rel="stylesheet" id="bootstrap-css">
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script>
+	// Initialize and add the map
+	function initMap() {
+	  var map = new google.maps.Map(
+	      document.getElementById('events-map'), {zoom: 4});
+	  var geocoder = new google.maps.Geocoder();
+	  var bounds = new google.maps.LatLngBounds();
+
+	  var addresses = document.getElementsByClassName('js-address')
+	  for (var address of addresses) {
+	 		addAddress(geocoder, map, bounds, address);
+	  }
+	}
+	function addAddress(geocoder, map, bounds, address) {
+    geocoder.geocode({'address': address.value}, function(results, status) {
+      if (status === 'OK') {
+        var marker = new google.maps.Marker({
+          map: map,
+          position: results[0].geometry.location,
+          title: address.dataset.title
+        });
+        bounds.extend(marker.position);
+
+        google.maps.event.addListener(marker, 'click', function() {
+				  document.location.href = address.dataset.href;
+				});
+			  map.fitBounds(bounds);
+
+      } else {
+        console.error('Unable to find the address (' + address + '): ' + status);
+      }
+    });
+  }
+
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{MAP_API_KEY}}&callback=initMap"></script>
+
 <!------ Include the above in your HEAD tag ---------->
 
     <div class="container">
 		<div class="row">
 			<div class="[ col-xs-12 col-sm-offset-2 col-sm-8 ]">
-			<h1>Events</h1>
-			</hr>
+				<h1>Events</h1>
+				<div id="events-map"></div>
+				</hr>
 				<ul class="event-list">
 				{{#each events}}
-					<li>
+          {{#if this.yearChanged}}
+  					<h2 class="text-center">{{this.startYear}}</h2>
+          {{/if}}
+          <li class="{{this.eventType}}">
+						{{#if this.addressLine_2}}
+							<input type="hidden" name="addresses[]" class="js-address" data-title="{{this.title}}" data-href="/frounted/event/details/events/{{ this._id }}" value="{{this.addressLine_1}}, {{this.addressLine_2}}, {{this.region}}, {{this.city}}">
+						{{else}}
+							<input type="hidden" name="addresses[]" class="js-address" data-title="{{this.title}}" data-href="/frounted/event/details/events/{{ this._id }}" value="{{this.addressLine_1}}, {{this.region}}, {{this.city}}">
+						{{/if}}
 						<time datetime="2014-07-20">
 							<span class="day">{{this.stratDate}}</span>
 							<span class="month">{{this.startMonth}}</span>
-							<span class="year">2014</span>
 							<span class="time">ALL DAY</span>
 						</time>
 						<div class="info">
-							<h2 class="title"><a href="details/events/{{ this._id }}" style="text-decoration: none;" >	{{this.name}}</a></h2>
+							<h2 class="title"><a href="/frounted/event/details/events/{{ this._id }}" style="text-decoration: none;" >	{{this.name}}</a></h2>
 							<p class="desc">{{this.city}} - {{this.postCode}}</p>
 						</div>
 					</li>

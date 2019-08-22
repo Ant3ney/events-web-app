@@ -21,7 +21,7 @@ hbs.registerHelper('for', function(from, to, incr, block) {
 });
 app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs'}));
 
-//route file 
+//route file
 app.use('/api',apiRouter)
 app.use('/frounted',frountedRouter)
 
@@ -40,7 +40,7 @@ db.connectDb(constant.DATABASE_URL).then(async () => {
 
 const gulp = require('gulp');
 const apidoc = require('gulp-api-doc');
- 
+
 gulp.task('doc', () => {
     return gulp.src('routes')
         .pipe(apidoc())

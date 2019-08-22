@@ -211,4 +211,17 @@ body {
         width: 40px;
         padding: 10px 0px 9px;
     }
+
+
+    .event-list>li.past-event>.info {
+        background-color: #c3c3c3;
+    }
+    .event-list>li.past-event>time {
+        background-color: #b5b5b5;
+    }
+}
+
+#events-map {
+  width: 100%;
+  height: 600px;
 }

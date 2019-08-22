@@ -9,9 +9,10 @@ const agenda = require('./../jobs/agenda');
 const constant = require('./../constant')
 const apiController = {
     event:{
-        
+
         get:function(req,res){
-            eventModel.find({},'_id name addressLine_1 addressLine_2 region city postCode eventStartDate eventEndDate notes status').then(function(data){
+            eventModel.find({},'_id name addressLine_1 addressLine_2 region city postCode eventStartDate eventEndDate notes status')
+                .sort('-eventStartDate').then(function(data){
                 return res.status(200).json({
                     event:data,
                 })
@@ -42,7 +43,7 @@ const apiController = {
                 notes,
                 status
             } = req.body;
-            
+
             var eventData = {
                 name,
                 addressLine_1,
@@ -58,7 +59,7 @@ const apiController = {
             eventData.api_key = req.user.auth_key;
 
             eventModel.create(eventData).then(function(data){
-                
+
                 agenda.schedule(moment(eventEndDate).format('YYYY-MM-DD HH:mm:ss'),'removeEvent',{
                     _id:data._id,
                     eventEndDate:eventEndDate
@@ -92,7 +93,7 @@ const apiController = {
                         status
                     }
                 })
-                
+
             }).catch(function(err){
                 console.log(err);
                 var obj = err.errors[Object.keys(err.errors)[0]];
@@ -102,7 +103,7 @@ const apiController = {
             });
         },
         update:function(req,res){
-            
+
             var update = req.body
 
             const filter = {_id:req.params.id}
@@ -162,7 +163,7 @@ const apiController = {
                 return res.status(404).json({
                     message:'Event not found'
                 })
-            }); 
+            });
         },
         addImage:function(req,res){
             const errors = validationResult(req);
@@ -188,7 +189,7 @@ const apiController = {
                 return res.status(422).json({ errors: errors.array()[0].msg });
             }
             var eventImagesObj = eventImagesModel.find({'id':req.body.imageId}).delete();
-            
+
             return res.status(200).json({
                  message:'success'
             })
@@ -209,9 +210,9 @@ const apiController = {
                     imagePath:constant.BASE_URL + '/' + constant.EVENT_FILE_PATH + '/' + element.filename
                 });
             }
-            
+
             return res.status(200).json({
-                images:responce   
+                images:responce
             })
         }
     }

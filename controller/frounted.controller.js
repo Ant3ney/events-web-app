@@ -11,13 +11,20 @@ const nodemailer = require("nodemailer");
 
 const frountedController = {
     eventList: async function(req, res, next) {
-        var events = await eventModel.find().sort({createdAt:'-1'})
+        var events = await eventModel.find({}).sort('-eventStartDate')
+        var today = new Date();
         for (var i = 0; i < events.length; i++) {
             events[i].stratDate = moment(events[i].eventStartDate).format('DD')
             events[i].startMonth = moment(events[i].eventStartDate).format('MMM')
             events[i].startYear = moment(events[i].eventStartDate).format('YYYY')
+            events[i].yearChanged = (events[i-1] == undefined) || (events[i].startYear !== events[i-1].startYear)
+            if (moment(events[i].eventStartDate).isBefore(today)) {
+                events[i].eventType = 'past-event'
+            } else {
+                events[i].eventType = ''
+            }
         }
-        res.render('index', { events: events, layout: null });
+        res.render('index', { events: events, layout: null, MAP_API_KEY: constant.MAP_API_KEY });
     },
     eventDetails: async function(req, res, next) {
         var event = await eventModel.findOne({ _id: req.params.id,status:'Pending' })
@@ -32,9 +39,9 @@ const frountedController = {
 
         eventObj.eventStartDate = moment(event.eventStartDate).format('MMMM Do YYYY, hh:mm:ss a')
         eventObj.eventEndDate = moment(event.eventEndDate).format('MMMM Do YYYY, hh:mm:ss a')
-        
+
         eventObj.images = await eventImagesModel.find({'eventId':eventObj._id})
-        
+
         await eventObj.images.forEach(function(item){
             item.filename = constant.BASE_URL + '/' + constant.EVENT_FILE_PATH + '/' + item.filename
         })
