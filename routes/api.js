@@ -74,10 +74,10 @@ router.get('/event', controller.event.get)
  * @apiParam {addressLine_1} addressLine_1
  * @apiParam {addressLine_2} addressLine_2 this is optional field
  * @apiParam {region} region
- * @apiParam {city} city 
+ * @apiParam {city} city
  * @apiParam {postCode} postCode
  * @apiParam {eventStartDate} eventStartDate
- * @apiParam {eventEndDate} eventEndDate 
+ * @apiParam {eventEndDate} eventEndDate
  * @apiParam {notes} notes this is optional field
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
@@ -121,7 +121,7 @@ router.post('/event', [
         var pattern = new RegExp("^(3[01]|[12][0-9]|0[1-9])/(1[0-2]|0[1-9])/[0-9]{4} (2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9])$");
         if (value.search(pattern) === 0) {
             return true
-        } 
+        }
         return Promise.reject('eventEndDate must be in correct format dd/mm/yyyy hh:mm:ss')
     }),
 ], controller.event.insert)
@@ -131,13 +131,13 @@ router.post('/event', [
  * @apiGroup Event
  * @apiParam {name} name
  * @apiParam {addressLine_1} addressLine_1
-  * @apiParam {addressLine_2} addressLine_2 
+  * @apiParam {addressLine_2} addressLine_2
  * @apiParam {region} region
  * @apiParam {city} city
  * @apiParam {postCode} postCode
  * @apiParam {eventStartDate} eventStartDate
  * @apiParam {eventEndDate} eventEndDate
- * @apiParam {notes} notes 
+ * @apiParam {notes} notes
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  {
@@ -165,7 +165,7 @@ router.put('/event/:id', controller.event.update)
  * @api {delete} /event/:id Remove a event
  * @apiGroup Event
  * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 
+ *    HTTP/1.1 200
      {
         "message": "success"
       }
@@ -180,9 +180,9 @@ var upload = multer({ dest: 'public/uploads/' })
  * @api {post} /event/images Add Images to Event
  * @apiGroup Event
  * @apiParam {image} form-data add single file object
- * @apiParam {eventId} event id  
+ * @apiParam {eventId} event id
  * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 
+ *    HTTP/1.1 200
      {
         imageId:"5d54a649b2976426a30ce964s",
         imagePath:"image url"
@@ -210,7 +210,7 @@ router.post('/event/images', [
  * @apiGroup Event
  * @apiParam {imageId} imageId for uniq image
  * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 
+ *    HTTP/1.1 200
      {
         message:"success"
     }
@@ -232,7 +232,7 @@ router.delete('/event/images', [check('imageId').exists().withMessage('imageId i
  * @apiGroup Event
  * @apiParam {eventId} eventid
  * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 
+ *    HTTP/1.1 200
      [{
         imageId:"5d54a649b2976426a30ce964s",
         imagePath:"image url"

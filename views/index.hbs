@@ -5,17 +5,22 @@
 <script>
 	// Initialize and add the map
 	function initMap() {
+	  var addresses = document.getElementsByClassName('js-address')
+    console.log(addresses.length);
+    if (addresses.length == 0) {
+      return;
+    }
 	  var map = new google.maps.Map(
 	      document.getElementById('events-map'), {zoom: 13});
 	  var geocoder = new google.maps.Geocoder();
 	  var bounds = new google.maps.LatLngBounds();
+    var currentLocation = null;
 
-	  var addresses = document.getElementsByClassName('js-address')
 	  for (var address of addresses) {
-	 		addAddress(geocoder, map, bounds, address);
+	 		currentLocation = addAddress(geocoder, map, bounds, address, addresses.length);
 	  }
 	}
-	function addAddress(geocoder, map, bounds, address) {
+	function addAddress(geocoder, map, bounds, address, addressesLength) {
     geocoder.geocode({'address': address.value}, function(results, status) {
       if (status === 'OK') {
         var marker = new google.maps.Marker({
@@ -28,8 +33,11 @@
         google.maps.event.addListener(marker, 'click', function() {
 				  document.location.href = address.dataset.href;
 				});
-			  map.fitBounds(bounds);
-
+        if (addressesLength > 1) {
+          map.fitBounds(bounds);
+        } else {
+          map.setCenter(marker.position);
+        }
       } else {
         console.error('Unable to find the address (' + address + '): ' + status);
       }
@@ -45,7 +53,9 @@
 		<div class="row">
 			<div class="[ col-xs-12 col-sm-offset-2 col-sm-8 ]">
 				<h1>Events</h1>
-				<div id="events-map"></div>
+        {{#if events.length }}
+  				<div id="events-map"></div>
+        {{/if}}
 				</hr>
 				<ul class="event-list">
 				{{#each events}}
