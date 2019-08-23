@@ -14,5 +14,3 @@ services:
       - database
     ports:
       - 3005:3005
-    environment:
-      GOOGLE_API_KEY: AIzaSyC0_l5ksKZqXqyXibY0AWsR86qJJPaRt_k
