@@ -28,7 +28,7 @@ router.post('/login', function (req, res, next) {
       res.cookie('jwt', jwt, { httpOnly: true, secure: true });
       user = user.toObject();
       user.auth_key = token;
-      res.status(200).json({ user });
+      res.redirect('/');
     });
   })
   (req, res);

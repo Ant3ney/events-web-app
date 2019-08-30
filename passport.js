@@ -1,7 +1,6 @@
 const User = require('./models/user');
 const passport = require('passport');
 const passportJWT = require("passport-jwt");
-const constant = require('./constant')
 const ExtractJWT = passportJWT.ExtractJwt;
 const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local').Strategy;

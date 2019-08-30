@@ -6,7 +6,7 @@ const frountedRouter = require('./routes/frounted')
 const userRouter = require('./routes/user.route')
 const auth = require('./controller/auth.controller');
 const bodyParser = require('body-parser')
-const constant = require('./constant')
+constant = require('./constant')
 const path = require('path')
 const hbs = require('hbs')
 const logger = require('morgan');
@@ -28,8 +28,8 @@ hbs.registerHelper('for', function(from, to, incr, block) {
 app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs'}));
 
 //route file
-app.use('/api', passport.authenticate('jwt', {session: false}),apiRouter)
-app.use('/frounted', passport.authenticate('jwt', {session: false}),frountedRouter)
+app.use('/api', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), apiRouter)
+app.use('/frounted', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}, frountedRouter)
 app.use('/user', userRouter);
 app.use('/auth', auth);
 
@@ -38,6 +38,15 @@ app.set("views",path.join(__dirname,"views"))
 app.set("view engine","hbs")
 
 app.use(express.static('public'))
+app.get('/', function (req, res) {
+  res.redirect('/frounted/event');
+});
+app.get('/login', function (req, res) {
+  res.render('login', {layout: false});
+});
+app.get('/register', function (req, res) {
+  res.render('register', {layout: false});
+});
 
 //run app
 app.listen(constant.PORT, () =>{
