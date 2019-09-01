@@ -29,7 +29,7 @@ app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs'}));
 
 //route file
 app.use('/api', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), apiRouter)
-app.use('/frounted', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}, frountedRouter)
+app.use('/frounted', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}, frountedRouter))
 app.use('/user', userRouter);
 app.use('/auth', auth);
 
