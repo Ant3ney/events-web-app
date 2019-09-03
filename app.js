@@ -11,6 +11,7 @@ const path = require('path')
 const hbs = require('hbs')
 const logger = require('morgan');
 const passport = require('passport');
+const cookieParser = require('cookie-parser');
 require('./models/index').connectDb(constant.DATABASE_URL);
 require('./passport');
 
@@ -18,6 +19,7 @@ const app = express();
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 hbs.registerHelper('for', function(from, to, incr, block) {
     var accum = '';
@@ -29,7 +31,7 @@ app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs'}));
 
 //route file
 app.use('/api', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), apiRouter)
-app.use('/frounted', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}, frountedRouter))
+app.use('/frounted', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), frountedRouter)
 app.use('/user', userRouter);
 app.use('/auth', auth);
 
@@ -37,7 +39,7 @@ app.use('/auth', auth);
 app.set("views",path.join(__dirname,"views"))
 app.set("view engine","hbs")
 
-app.use(express.static('public'))
+app.use(express.static('public'));
 app.get('/', function (req, res) {
   res.redirect('/frounted/event');
 });

@@ -26,15 +26,38 @@ passport.use(new LocalStrategy({
     }
   }
 ));
+var TokenExtractor = function(req){
+  var token = null;
+
+  if ((req.headers && req.headers.authorization) || (req.query && req.query.authorization)) {
+    if (req.headers.authorization)
+      var parts = req.headers.authorization.split(' ');
+    else if (req.query.authorization)
+      var parts = req.query.authorization.split(' ');
+
+    if (parts.length == 2) {
+      var scheme = parts[0],
+        credentials = parts[1];
+
+      if (/^Bearer$/i.test(scheme)) { //<-- replace MyBearer by your own.
+        token = credentials;
+      }
+    }
+  } else if (req.param('token')) {
+    token = req.param('token');
+    delete req.query.token;
+  } else if (req.cookies['token']) {
+    token = req.cookies['token'];
+  }
+
+  return token;
+}
 
 passport.use(new JWTStrategy({
-    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+    jwtFromRequest: TokenExtractor,
     secretOrKey: constant.SECRET
   },
   (jwtPayload, done) => {
-    if (Date.now() > jwtPayload.expires) {
-      return done('jwt expired');
-    }
     return done(null, jwtPayload);
   }
 ));

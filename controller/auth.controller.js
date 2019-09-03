@@ -25,10 +25,9 @@ router.post('/login', function (req, res, next) {
       }
 
       const token = jwt.sign(JSON.stringify(payload), constant.SECRET);
-      res.cookie('jwt', jwt, { httpOnly: true, secure: true });
       user = user.toObject();
       user.auth_key = token;
-      res.redirect('/');
+      res.status(200).cookie('token', token, { maxAge: 300000 }).send({user});
     });
   })
   (req, res);
