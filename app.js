@@ -2,7 +2,7 @@ const express  = require('express')
 const db = require('./models/index')
 const apiRouter = require('./routes/api')
 const expressHbs = require('express-handlebars');
-const frountedRouter = require('./routes/frounted')
+const frontendRouter = require('./routes/frontend')
 const bodyParser = require('body-parser')
 constant = require('./constant')
 const path = require('path')
@@ -23,7 +23,7 @@ app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs'}));
 
 //route file
 app.use('/api',apiRouter)
-app.use('/frounted',frountedRouter)
+app.use('/frontend',frontendRouter)
 
 app.set("views",path.join(__dirname,"views"))
 app.set("view engine","hbs")
