@@ -22,9 +22,16 @@ $(function() {
                  data: JSON.stringify(data),
                  contentType: "application/json",
                  success: function (response, status, request) {
-                    window.location = '/';
+                    var headerObject = {
+                       'Authorization': 'Bearer ' + response.user.auth_key
+                     };
+                   $.ajaxSetup({
+                         headers: headerObject
+                       });
+                    window.location = '/'
                  },
                  error: function (xhr, ajaxOptions, thrownError) {
+
                     alert(xhr.responseJSON.message);
                  }
                 })

@@ -64,9 +64,9 @@
           {{/if}}
           <li class="{{this.eventType}}">
 						{{#if this.addressLine_2}}
-							<input type="hidden" name="addresses[]" class="js-address" data-title="{{this.title}}" data-href="/frounted/event/details/events/{{ this._id }}" value="{{this.addressLine_1}}, {{this.addressLine_2}}, {{this.region}}, {{this.city}}">
+							<input type="hidden" name="addresses[]" class="js-address" data-title="{{this.title}}" data-href="/frontend/event/details/events/{{ this._id }}" value="{{this.addressLine_1}}, {{this.addressLine_2}}, {{this.region}}, {{this.city}}">
 						{{else}}
-							<input type="hidden" name="addresses[]" class="js-address" data-title="{{this.title}}" data-href="/frounted/event/details/events/{{ this._id }}" value="{{this.addressLine_1}}, {{this.region}}, {{this.city}}">
+							<input type="hidden" name="addresses[]" class="js-address" data-title="{{this.title}}" data-href="/frontend/event/details/events/{{ this._id }}" value="{{this.addressLine_1}}, {{this.region}}, {{this.city}}">
 						{{/if}}
 						<time datetime="2014-07-20">
 							<span class="day">{{this.stratDate}}</span>
@@ -74,7 +74,7 @@
 							<span class="time">ALL DAY</span>
 						</time>
 						<div class="info">
-							<h2 class="title"><a href="/frounted/event/details/events/{{ this._id }}" style="text-decoration: none;" >	{{this.name}}</a></h2>
+							<h2 class="title"><a href="/frontend/event/details/events/{{ this._id }}" style="text-decoration: none;" >	{{this.name}}</a></h2>
 							<p class="desc">{{this.city}} - {{this.postCode}}</p>
 						</div>
 					</li>

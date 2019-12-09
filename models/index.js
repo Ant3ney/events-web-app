@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
+const User = require('./user');
 
 const connectDb = (URL) => {
   return mongoose.connect(URL,{ useNewUrlParser: true });
 };
 
-module.exports.connectDb = (URL) => {
-  if (mongoose.connection.db == null) {
-    return mongoose.connect(URL, { useNewUrlParser: true }).catch(function (ee) {});
-  }
-}
+const models = { User };
+
+module.exports = {models,connectDb}
