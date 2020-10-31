@@ -37,6 +37,7 @@ app.use('/api', apiRouter);
 app.use("/user", userRouter);
 app.use('/frontend',frontendRouter);
 app.use(testRouter);
+app.get("/", (req, res) => {res.send("In index")});
 
 app.set("views",path.join(__dirname,"views"));
 app.set("view engine","hbs");
