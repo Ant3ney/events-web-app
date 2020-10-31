@@ -1,10 +1,26 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
+var userSchema = new mongoose.Schema({
   name: {
     type: String,
+    required: true
   },
-},{ timestamps: { createdAt: 'createdAt' }  });
+  passwordHash: {
+    type: String
+  },
+  userType: {
+    type: String,
+    required: true
+  },
+  jwtApiKey: {
+    type: String
+  }
+},
+{ 
+  timestamps: { 
+    createdAt: 'createdAt' 
+  }  
+});
 
 
 const user = mongoose.model('User', userSchema);
