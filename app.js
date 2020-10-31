@@ -45,7 +45,7 @@ app.set("view engine","hbs");
 app.use(express.static('public'));
 
 //run app
-db.connectDb(config.getDbString())
+db.connectDb(process.env.MONGO_ATLAS_DBURL)
 app.listen(process.env.PORT, () =>{
     console.log(`App started on ${constant.PORT}!`);
     console.log("The url = " + config.getDbString());
