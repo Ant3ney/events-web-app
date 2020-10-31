@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 passport.initialize()
 app.use(passport.initialize())
 
-config(process);
+config.fixOnExit(process);
 hbs.registerHelper('for', function(from, to, incr, block) {
     var accum = '';
     for(var i = from; i < to; i += incr)
@@ -44,7 +44,7 @@ app.set("view engine","hbs");
 app.use(express.static('public'));
 
 //run app
-db.connectDb(constant.DATABASE_URL).then(() => {
+db.connectDb(config.getDbString()).then(() => {
     app.listen(constant.PORT, () =>{
             console.log(`App started on ${constant.PORT}!`)
         }
