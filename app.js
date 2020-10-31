@@ -45,15 +45,13 @@ app.set("view engine","hbs");
 app.use(express.static('public'));
 
 //run app
-db.connectDb(config.getDbString()).then(() => {
-    app.listen(process.env.PORT, () =>{
-            console.log(`App started on ${constant.PORT}!`)
-        }
-    )
+db.connectDb(config.getDbString())
+app.listen(process.env.PORT, () =>{
+    console.log(`App started on ${constant.PORT}!`)
 });
 
 const gulp = require('gulp');
-const apidoc = require('gulp-api-doc');
+const apidoc = require('gulp-apidoc');
 
 gulp.task('doc', () => {
     return gulp.src('routes')
