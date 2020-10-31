@@ -1,7 +1,8 @@
 const User = require('./../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const constant = require('../constant')
+const constant = require('../constant');
+var passport = require("passport");
 const hashCost = 10;
 
 module.exports.createUser = async (req, res) => {
@@ -12,43 +13,79 @@ module.exports.createUser = async (req, res) => {
       res.status(409).json({
         message: 'User already exists'
       });
+      return;
     }
-    user = new User({name: userData.name});
+
     const passwordHash = await bcrypt.hash(userData.password, hashCost);
-    user.passwordHash = passwordHash;
+    user = new User({name: userData.name, passwordHash: passwordHash, userType: "user"});
+    console.log("New name: " + user.name);
     await user.save();
     res.status(200).json({
       user: user
     });
   } catch (err) {
     res.status(400).json({
-      message: 'Unable to create the user'
+      message: 'Unable to create the user' + " " + err.message
     });
   }
 };
 
-module.exports.updateUser = async (req, res) => {
-  let userId = req.params.user_id;
-  let userData = req.body;
-  try {
-    let user = await User.findOne({_id: userId});
-    if (!user) {
-      res.status(404).json({
-        message: 'User not found'
+module.exports.reValidateKey = (req, res, next) => {
+  //Check if user is logged in
+  passport.authenticate('jwt', {session: false, failureRedirect: "/login"}, (err, user, info) => {
+    if(err){
+      console.log("Something went wrong");
+      console.log(err.message);
+      res.json(err);
+    }
+    else if(!user){
+      res.redirect("/login");
+    }
+    else{
+      const payload = {
+        username: user.name,
+        expires: Date.now() + constant.JWT_EXPIRATION_MS,
+      };
+      const token = jwt.sign(JSON.stringify(payload), constant.SECRET);
+      res.cookie('jwt', jwt, { httpOnly: true, secure: true });
+      res.cookie("token", token.toString());
+      user.jwtApiKey = token.toString();
+      user.save((err, user) => {
+        res.json(user);
       });
     }
-    if (userData.password) {
-      const passwordHash = await bcrypt.hash(userData.password, hashCost);
-      user.passwordHash = passwordHash;
-    }
-    await user.save();
-    res.status(200).json({
-      user: user
-    });
+  })(req, res, next);
+}
 
-  } catch (err) {
-    res.status(400).json({
-      message: 'Unable to update the user'
-    });
-  }
+module.exports.updateUser = (req, res, next) => {
+  passport.authenticate('jwt', {session: false}, (err, user, info) => {
+    let userId = req.params.user_id;
+    let userData = req.body;
+    try {
+      User.findOne({_id: userId}, (err, user) => {
+        if (!user) {
+          res.status(404).json({
+            message: 'User not found'
+          });
+        }
+        if (userData.password) {
+          bcrypt.hash(userData.password, hashCost, (err, passwordHash) => {
+            user.passwordHash = passwordHash;
+            user.save((err, user) => {
+              console.log("User sucesfull updated password");
+              res.status(200).json({
+                user: user
+              });
+            });
+          });
+        }
+      });
+      
+
+    } catch (err) {
+      res.status(400).json({
+        message: 'Unable to update the user'
+      });
+    }
+  })(req, res, next);
 };

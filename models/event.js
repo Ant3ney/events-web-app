@@ -33,6 +33,31 @@ const eventSchema = new mongoose.Schema({
         type : Date,
         required:[true,'eventEndDate is required']
     },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required:[true,'User is required']
+    },
+    category: {
+        type: String,
+        required:[true,'Category is required']
+    },
+    visibility: {
+        type: String,
+        required:[true,'Visibility is required']
+    },
+    country: {
+        type: String,
+        required: [true, "Country is required"]
+    },
+    geocode: {
+        lat: {
+            type: String
+        },
+        long: {
+            type: String
+        }
+    },
     notes:{
         type : String,
     },
