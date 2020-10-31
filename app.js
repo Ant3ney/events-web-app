@@ -46,7 +46,7 @@ app.use(express.static('public'));
 
 //run app
 db.connectDb(config.getDbString()).then(() => {
-    app.listen(constant.PORT, () =>{
+    app.listen(process.env.PORT, () =>{
             console.log(`App started on ${constant.PORT}!`)
         }
     )
