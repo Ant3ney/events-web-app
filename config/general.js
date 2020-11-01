@@ -9,7 +9,7 @@ module.exports = {
     },
     configureCorsOrginAcess: (app) => {
         app.use((req, res, next) => {
-            var host = req.headers.host;
+            var host = req.get("orgin");
             var orgin = corsCheck(host);
             
             res.setHeader('Access-Control-Allow-Origin', orgin);
