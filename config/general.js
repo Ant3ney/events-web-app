@@ -15,8 +15,11 @@ module.exports = {
             res.setHeader('Access-Control-Allow-Origin', orgin);
 	        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+            console.log("Host: " + host);
+            console.log("Orgin: " + orgin);
 	        next();
-        })
+        });
     },
     getDbString: () => {
         if(process.env.LOCATION == "Heroku"){
