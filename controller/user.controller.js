@@ -6,6 +6,7 @@ var passport = require("passport");
 const hashCost = 10;
 
 module.exports.createUser = async (req, res) => {
+  console.log("Made it this far!________________---------");
   let userData = req.body;
   try {
     let user = await User.findOne({name: userData.name});
