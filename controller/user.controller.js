@@ -15,19 +15,19 @@ module.exports.createUser = async (req, res) => {
       });
       return;
     }
-
+    console.log("User Data: " + userData);
     bcrypt.hash(userData.password, hashCost, (err, hash) => {
       if(err){
-        console.log("something went wrong");
+        console.log("something went wrong in create password");
         console.log(err);
-        res.status(400).json(err);
+        res.status(400).json({err: err});
         return;
       }
-      User.create({name: userData.name, passwordHash: passwordHash, userType: "user"}, (err, user) => {
+      User.create({name: userData.name, passwordHash: hash, userType: "user"}, (err, user) => {
         if(err){
-          console.log("something went wrong");
+          console.log("something went wrong in create user");
           console.log(err);
-          res.status(400).json(err);
+          res.status(400).json({err: err});
           return;
         }
         console.log("New name: " + user.name);
