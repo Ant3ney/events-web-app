@@ -6,9 +6,6 @@ var passport = require("passport");
 const hashCost = 10;
 
 module.exports.createUser = async (req, res) => {
-  console.log("Made it this far!________________---------");
-  res.json({msg: "made it"});
-  return;
   let userData = req.body;
   try {
     let user = await User.findOne({name: userData.name});
@@ -20,7 +17,7 @@ module.exports.createUser = async (req, res) => {
     }
 
     const passwordHash = await bcrypt.hash(userData.password, hashCost);
-    user = new User({name: userData.name, passwordHash: passwordHash, userType: "user"});
+    user = await new User({name: userData.name, passwordHash: passwordHash, userType: "user"});
     console.log("New name: " + user.name);
     await user.save();
     res.status(200).json({
