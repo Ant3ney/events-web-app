@@ -7,6 +7,7 @@ const hashCost = 10;
 
 module.exports.createUser = async (req, res) => {
   let userData = req.body;
+  userData = JSON.parse(userData);
   try {
     let user = await User.findOne({name: userData.name});
     if (user) {
@@ -16,6 +17,7 @@ module.exports.createUser = async (req, res) => {
       return;
     }
     console.log("User Data: " + userData);
+    console.log("User Data password: " + userData.password);
     bcrypt.hash(userData.password, hashCost, (err, hash) => {
       if(err){
         console.log("something went wrong in create password");
