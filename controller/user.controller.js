@@ -7,7 +7,6 @@ const hashCost = 10;
 
 module.exports.createUser = async (req, res) => {
   let userData = req.body;
-  userData = JSON.parse(userData);
   try {
     let user = await User.findOne({name: userData.name});
     if (user) {
