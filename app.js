@@ -14,6 +14,7 @@ const passport = require("passport");
 const passportCofig = require("./config/passport");
 const User = require("./models/user");
 var cookieParser = require('cookie-parser');
+require('dotenv').config();
 
 const app = express();
 
@@ -24,6 +25,7 @@ passport.initialize()
 app.use(passport.initialize())
 
 config.fixOnExit(process);
+config.configureCorsOrginAcess(app);
 hbs.registerHelper('for', function(from, to, incr, block) {
     var accum = '';
     for(var i = from; i < to; i += incr)
@@ -43,12 +45,11 @@ app.set("views",path.join(__dirname,"views"));
 app.set("view engine","hbs");
 
 app.use(express.static('public'));
-
 //run app
-db.connectDb(process.env.MONGO_ATLAS_DBURL)
+db.connectDb(process.env.MONGO_ATLAS_DBURL);
 app.listen(process.env.PORT, () =>{
     console.log(`App started on ${constant.PORT}!`);
-    console.log("The url = " + config.getDbString());
+    console.log("The url = " + process.env.MONGO_ATLAS_DBURL);
 });
 
 const gulp = require('gulp');
