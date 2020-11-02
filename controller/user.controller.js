@@ -17,6 +17,7 @@ module.exports.createUser = async (req, res) => {
     }
     console.log("User Data: " + userData);
     console.log("User Data password: " + userData.password);
+    console.log("User Data password: " + req.body.password);
     bcrypt.hash(userData.password, hashCost, (err, hash) => {
       if(err){
         console.log("something went wrong in create password");
@@ -104,3 +105,25 @@ module.exports.updateUser = (req, res, next) => {
     }
   })(req, res, next);
 };
+
+module.exports.isValid = (req, res, next) => {
+  passport.authenticate('jwt', {session: false}).then((user) => {
+    if(!user){
+      res.status(200).json({
+        isValid: false,
+        message: "No user autenticated with that jwt token"
+      });
+      return;
+    }
+    res.status(200).json({
+      isValid: true,
+      user: user,
+      message: "User found"
+    });
+  }).catch((err) => {
+    res.status(400).json({
+      isValid: false,
+      message: err.message
+    })
+  });
+}
