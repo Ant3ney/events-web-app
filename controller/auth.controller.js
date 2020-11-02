@@ -29,16 +29,16 @@ module.exports = (req, res, next) => {
             };
             const token = jwt.sign(JSON.stringify(payload), constant.SECRET);
             //res.cookie('jwt', jwt);
-            res.cookie("token", token.toString());
+            res.cookie("token", token.toString(), {httpOnly: false, secure: true, sameSite: "none"});
             user.jwtApiKey = token.toString();
             user.save((err, user) => {
-              res.redirect('/');
+              res.json(user);
             });
           }
           else{//Current machine needs to be updated
             console.log("User exzists but machine dose not have token");
             //res.cookie('jwt', jwt);
-            res.cookie("token", user.jwtApiKey, {httpOnly: false}).json(user);
+            res.cookie("token", user.jwtApiKey, {httpOnly: false, secure: true, sameSite: "none"}).json(user);
           }
         });
     }
@@ -62,7 +62,7 @@ module.exports = (req, res, next) => {
     
           const token = jwt.sign(JSON.stringify(payload), constant.SECRET);
           //res.cookie('jwt', jwt);
-          res.cookie("token", token.toString());
+          res.cookie("token", token.toString(), {httpOnly: false, secure: true, sameSite: "none"});
           user.jwtApiKey = token.toString();
           user.save((err, user) => {
             res.json(user);
