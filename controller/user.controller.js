@@ -107,8 +107,14 @@ module.exports.updateUser = (req, res, next) => {
 };
 
 module.exports.isValid = (req, res, next) => {
-  passport.authenticate('jwt', {session: false}).then((user) => {
-    if(!user){
+  passport.authenticate('jwt', {session: false}, (err, user) => {
+    if(err){
+      res.status(400).json({
+        isValid: false,
+        message: err.message
+      });
+    }
+    else if(!user){
       res.status(200).json({
         isValid: false,
         message: "No user autenticated with that jwt token"
@@ -120,10 +126,5 @@ module.exports.isValid = (req, res, next) => {
       user: user,
       message: "User found"
     });
-  }).catch((err) => {
-    res.status(400).json({
-      isValid: false,
-      message: err.message
-    })
   });
 }
