@@ -37,8 +37,8 @@ module.exports = (req, res, next) => {
           }
           else{//Current machine needs to be updated
             console.log("User exzists but machine dose not have token");
-            //res.cookie('jwt', jwt, { httpOnly: true, secure: true });
-            res.cookie("token", user.jwtApiKey, {domain: "*"});
+            res.cookie('jwt', jwt, { httpOnly: true, secure: true });
+            res.cookie("token", user.jwtApiKey);
             res.json(user);
           }
         });
