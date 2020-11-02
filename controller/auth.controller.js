@@ -36,9 +36,10 @@ module.exports = (req, res, next) => {
             });
           }
           else{//Current machine needs to be updated
-            res.cookie('jwt', jwt, { httpOnly: true, secure: true });
-            res.cookie("token", user.jwtApiKey);
-            res.redirect('/');
+            console.log("User exzists but machine dose not have token");
+            //res.cookie('jwt', jwt, { httpOnly: true, secure: true });
+            res.cookie("token", user.jwtApiKey, {domain: "*"});
+            res.json(user);
           }
         });
     }
@@ -65,7 +66,7 @@ module.exports = (req, res, next) => {
           res.cookie("token", token.toString());
           user.jwtApiKey = token.toString();
           user.save((err, user) => {
-            res.redirect('/');
+            res.json(user);
           });
         });
       });
