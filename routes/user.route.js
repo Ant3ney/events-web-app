@@ -7,6 +7,6 @@ router.post('/create', UserController.createUser);
 router.post("/login", authController);
 router.put('/update/:user_id', UserController.updateUser);
 router.get("/reValidateKey", UserController.reValidateKey);
-router.get("isValid", UserController.isValid);
+router.get("/isValid", UserController.isValid);
 
 module.exports = router;
