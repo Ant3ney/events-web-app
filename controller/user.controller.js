@@ -129,5 +129,5 @@ module.exports.isValid = (req, res, next) => {
       user: user,
       message: "User found"
     });
-  });
+  })(req, res, next);
 }
