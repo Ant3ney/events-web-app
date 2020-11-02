@@ -4,6 +4,18 @@ var User = require("../models/user");
 var Event = require("../models/event");
 var hereUtil = require("../utilities/here");
 var authUtil = require("../utilities/authentication");
+var cookie = require('cookie');
+
+router.get("/testSetCookie", (req, res) => {
+    /*res.setHeader('Set-Cookie', cookie.serialize('name', "This is the vlaue", {
+        httpOnly: true,
+        maxAge: 60 * 60 * 24 * 7, // 1 week
+        sameSite: false
+    }));*/
+    //res.setHeader('Set-Cookie''foo=bar; HttpOnly'
+    //res.end();
+    res.cookie("Test", "If you see this then it works", {httpOnly: false, secure: true, sameSite: "none"}).json({message: "Finished"});
+})
 
 router.get("/testTestGetLoggedInUser", (req, res) => {
     authUtil.getUserFromJwt(req).then((user) => {

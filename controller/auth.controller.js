@@ -28,7 +28,7 @@ module.exports = (req, res, next) => {
               expires: Date.now() + constant.JWT_EXPIRATION_MS,
             };
             const token = jwt.sign(JSON.stringify(payload), constant.SECRET);
-            res.cookie('jwt', jwt, { httpOnly: true, secure: true });
+            //res.cookie('jwt', jwt);
             res.cookie("token", token.toString());
             user.jwtApiKey = token.toString();
             user.save((err, user) => {
@@ -37,9 +37,8 @@ module.exports = (req, res, next) => {
           }
           else{//Current machine needs to be updated
             console.log("User exzists but machine dose not have token");
-            res.cookie('jwt', jwt, { httpOnly: true, secure: true });
-            res.cookie("token", user.jwtApiKey);
-            res.json(user);
+            //res.cookie('jwt', jwt);
+            res.cookie("token", user.jwtApiKey, {httpOnly: false}).json(user);
           }
         });
     }
@@ -62,7 +61,7 @@ module.exports = (req, res, next) => {
           }
     
           const token = jwt.sign(JSON.stringify(payload), constant.SECRET);
-          res.cookie('jwt', jwt, { httpOnly: true, secure: true });
+          //res.cookie('jwt', jwt);
           res.cookie("token", token.toString());
           user.jwtApiKey = token.toString();
           user.save((err, user) => {
@@ -72,7 +71,7 @@ module.exports = (req, res, next) => {
       });
     }
     else{//The browser has jwt saved and db has jwt saved. Any further authentication is useless
-      res.redirect('/');
+      res.json({message: "sucess"});
     }
   })(req, res, next);
 };
