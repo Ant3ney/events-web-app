@@ -10,11 +10,13 @@ const constant = require('./../constant');
 const passport = require("passport");
 const here = require("../utilities/here");
 const authUtil = require("../utilities/authentication");
+const apiUtil = require("../utilities/api");
+var util = require('../utilities/api');
 
 const apiController = {
     event:{
         get:function(req, res, next){
-            eventModel.find({visibility: "public"},'_id name addressLine_1 addressLine_2 region city postCode eventStartDate eventEndDate notes status visibility geocode')
+            eventModel.find({visibility: "public"},'_id name addressLine_1 addressLine_2 region city postCode eventStartDate eventEndDate notes status visibility geocode createdBy country category')
             .sort('-eventStartDate')
             .then((data) => {
                 //returns {data, user} in promise format
@@ -45,15 +47,17 @@ const apiController = {
                 var data = dbInfo.data;
                 var user = dbInfo.user;
 
-                console.log("dbInfo below");
-                console.log(dbInfo);
                 return new Promise((resolve, reject) => {
                     eventModel
                     .find({createdBy: user._id}, '_id name addressLine_1 addressLine_2 region city postCode eventStartDate eventEndDate notes status visibility geocode')
                     .then((userEvents) => {
+                        var fDateAll = util.formatEventAryDates(data);
+                        var fDateUser = util.formatEventAryDates(userEvents);
                         resolve({
                             allEvents: data,
-                            userEvents: userEvents
+                            userEvents: userEvents,
+                            fDateAll: fDateAll,
+                            fDateUser: fDateUser
                         });
                     })
                     .catch((err) => {
@@ -199,8 +203,8 @@ const apiController = {
             });
         },
         update:function(req, res, next){
-            var eventStartDate = moment(req.body.eventStartDate,'DD/MM/YYYY hh:mm:ss');
-            var eventEndDate = moment(req.body.eventEndDate,'DD/MM/YYYY hh:mm:ss');
+            var eventStartDate = moment(req.body.eventStartDate ,'DD/MM/YYYY hh:mm:ss');
+            var eventEndDate = moment(req.body.eventStartDate ,'DD/MM/YYYY hh:mm:ss');
             var update = req.body;
 
             update._id = req.params.id;
@@ -235,7 +239,6 @@ const apiController = {
                         reject({message: "Not logged in"});
                     }
                     else{
-                        console.log("Here03");
                         update.createdBy = user._id;
                         eventModel.findByIdAndUpdate(req.params.id, update , {new: true}, (err, updatedEvent) => {
                             if(err){
@@ -303,6 +306,7 @@ const apiController = {
             })
         },
         delete:function (req,res) {
+            console.log("In delete route");
             eventModel.find({}, (err, allEvents) => {
                 allEvents.forEach((theEvent) => {
                     console.log(req.params.id + " != " + theEvent._id);
@@ -310,10 +314,8 @@ const apiController = {
             });
             const filter = {_id: req.params.id}
             eventModel.find(filter).then(function(event){
-                console.log("Event below");
-                console.log(event);
                 if (event.length <= 0) {
-                    console.log("Failed for other reason");
+                    console.error("Failed for other reason");
                     return Promise.reject('Event not found');
                 }
                 //Check if user has acess

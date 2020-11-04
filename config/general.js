@@ -13,7 +13,7 @@ module.exports = {
             var orgin = corsCheck(host);
             
             res.setHeader('Access-Control-Allow-Origin', orgin);
-	        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+	        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE, OPTIONS');
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             res.header('Access-Control-Allow-Credentials', true);
 

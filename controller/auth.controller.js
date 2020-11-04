@@ -36,7 +36,7 @@ module.exports = (req, res, next) => {
             });
           }
           else{//Current machine needs to be updated
-            console.log("User exzists but machine dose not have token");
+            console.warn("User exzists but machine dose not have token");
             //res.cookie('jwt', jwt);
             res.cookie("token", user.jwtApiKey, {httpOnly: false, secure: true, sameSite: "none"}).json(user);
           }

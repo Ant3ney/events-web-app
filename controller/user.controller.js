@@ -107,9 +107,7 @@ module.exports.updateUser = (req, res, next) => {
 };
 
 module.exports.isValid = (req, res, next) => {
-  console.log("Made it here");
   passport.authenticate('jwt', {session: false}, (err, user) => {
-    console.log("And here it here");
     if(err){
       res.json({
         isValid: false,

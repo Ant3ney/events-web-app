@@ -7,9 +7,10 @@ const eventModel = require('./../models/event');
 const passport = require("passport");
 
 const auth = function(req, res, next) {
-   passport.authenticate('jwt', {session: false, failureRedirect: "/loin"}, (err, user, info) => {
+   console.log("In the jwt auth");
+   passport.authenticate('jwt', {session: false}, (err, user, info) => {
         if(!user){
-            res.redirect("/login");
+            res.json({message: "no user found with that jwt"});
         }
         else{
             next();
@@ -22,6 +23,7 @@ router.get('/event', controller.event.get);
 
 router.post('/event',(req, res, next) => {
     //Check to see if submited info is valid
+    console.log("Made it here");
     var failFlag = false;
     var err = {};
     err.message = "The following issues are pressent";
@@ -31,8 +33,9 @@ router.post('/event',(req, res, next) => {
     }
     //... add the rest of the checks later
     if(failFlag){
-        res.status(406).send(err.message);
+        res.status(406).json({message: err.message});
     }
+    console.log("Made it to the end")
     next();
 }, controller.event.insert);
 
