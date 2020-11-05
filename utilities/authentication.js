@@ -34,7 +34,7 @@ var authUtil = {
         });
     },
     removeJwtFromResponse: (res) => {
-        res.cookie['token', 'unset', {httpOnly: false, secure: true, sameSite: "none"}];
+        res.cookie('token', 'unset', {httpOnly: false, secure: true, sameSite: "none"});
     }
 }
 
