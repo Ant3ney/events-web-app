@@ -8,8 +8,8 @@ var authUtil = {
         return new Promise((resolve, reject) => {
             nJwt.verify(currentJtw, constant.SECRET, (err, verifiedJwt) => {
                 if(err){
-                    console.log("Something went wrong in authentication utility isCurrentJwtValid functions promise that has to do with nJwt");
-                    console.log(err.message)
+                    console.error("Something went wrong in authentication utility isCurrentJwtValid functions promise that has to do with nJwt");
+                    console.error(err.message)
                     reject(err);
                 }
                 else{
@@ -27,10 +27,14 @@ var authUtil = {
                         resolve(user);
                    });
                }); 
-            }).then((user) => {
+            })
+            .then((user) => {
                 resolve(user);
             });
         });
+    },
+    removeJwtFromResponse: (res) => {
+        res.cookie['token', 'unset', {httpOnly: false, secure: true, sameSite: "none"}];
     }
 }
 

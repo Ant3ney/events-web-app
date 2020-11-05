@@ -49,7 +49,6 @@ app.use(express.static('public'));
 db.connectDb(process.env.MONGO_ATLAS_DBURL);
 app.listen(process.env.PORT, () =>{
     console.log(`App started on ${constant.PORT}!`);
-    console.log("The url = " + process.env.MONGO_ATLAS_DBURL);
 });
 
 const gulp = require('gulp');
