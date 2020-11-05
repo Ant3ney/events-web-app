@@ -2,7 +2,7 @@ const User = require('./../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const constant = require('../constant');
-var passport = require("passport");
+const passport = require("passport");
 const hashCost = 10;
 
 module.exports.createUser = async (req, res) => {
@@ -47,15 +47,15 @@ module.exports.createUser = async (req, res) => {
 };
 
 module.exports.reValidateKey = (req, res, next) => {
-  //Check if user is logged in
   passport.authenticate('jwt', {session: false, failureRedirect: "/login"}, (err, user, info) => {
     if(err){
-      console.log("Something went wrong");
-      console.log(err.message);
-      res.json(err);
+      console.error("Something went wrong");
+      console.error(err.message);
+      res.status(401).json(err);
     }
     else if(!user){
-      res.redirect("/login");
+      console.error("No user was found with that username");
+      res.status(401).json({message: 'no user was found with that jwt'});
     }
     else{
       const payload = {
@@ -67,7 +67,13 @@ module.exports.reValidateKey = (req, res, next) => {
       res.cookie("token", token.toString());
       user.jwtApiKey = token.toString();
       user.save((err, user) => {
-        res.json(user);
+        if(err){
+          console.error("Something went wrong");
+          console.error(err.message);
+          res.status(401).json(err);
+          return;
+        }
+        res.status(200).json(user);
       });
     }
   })(req, res, next);
