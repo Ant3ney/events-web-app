@@ -67,7 +67,8 @@ module.exports = {
         });
       }
       else{//The browser has jwt saved and db has jwt saved. Any further authentication is useless
-        res.json({message: "sucess"});
+        res.cookie("token", user.jwtApiKey, {httpOnly: false, secure: true, sameSite: "none"});
+        res.status(200).json({message: "sucess"});
       }
     })(req, res, next);
   },
