@@ -28,13 +28,14 @@ module.exports = {
               res.cookie("token", token.toString(), {httpOnly: false, secure: true, sameSite: "none"});
               user.jwtApiKey = token.toString();
               user.save((err, user) => {
-                res.json(user);
+                res.json({user: user});
               });
             }
             else{//Current machine needs to be updated
               console.warn("User exzists but machine dose not have token");
               //res.cookie('jwt', jwt);
-              res.cookie("token", user.jwtApiKey, {httpOnly: false, secure: true, sameSite: "none"}).json(user);
+              res.cookie("token", user.jwtApiKey, {httpOnly: false, secure: true, sameSite: "none"})
+              .status(200).json({user: user});
             }
           });
       }
@@ -57,18 +58,17 @@ module.exports = {
             }
       
             const token = jwt.sign(JSON.stringify(payload), constant.SECRET);
-            //res.cookie('jwt', jwt);
             res.cookie("token", token.toString(), {httpOnly: false, secure: true, sameSite: "none"});
             user.jwtApiKey = token.toString();
             user.save((err, user) => {
-              res.json(user);
+              res.status(200).json({user: user});
             });
           });
         });
       }
       else{//The browser has jwt saved and db has jwt saved. Any further authentication is useless
         res.cookie("token", user.jwtApiKey, {httpOnly: false, secure: true, sameSite: "none"});
-        res.status(200).json({message: "sucess"});
+        res.status(200).json({message: "sucess", user: user});
       }
     })(req, res, next);
   },
