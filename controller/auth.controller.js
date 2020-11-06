@@ -11,6 +11,7 @@ module.exports = {
       if (err || !user) {
         return res.status(400).json({
           message: info ? info.message : 'Login failed',
+          error: err,
           user   : user
         });
       }

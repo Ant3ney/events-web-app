@@ -11,6 +11,7 @@ const path = require('path');
 const hbs = require('hbs');
 const config = require("./config/general");
 const passport = require("passport");
+const passPortConfig = require('./config/passport');
 var cookieParser = require('cookie-parser');
 require('dotenv').config();
 

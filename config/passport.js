@@ -3,7 +3,6 @@ const localStrategy = require("passport-local").Strategy;
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
 const constant = require('../constant')
 
 //Local authentication
@@ -18,6 +17,7 @@ passport.use(new localStrategy({
             return done(null, false);
         }
         else if(!user){//means no acount with specified username was found
+            console.log("No user found with that name");
             return done(null, false);
         }
         var hash = user.passwordHash;
