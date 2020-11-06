@@ -22,7 +22,7 @@ const eventSchema = new mongoose.Schema({
         required:[true,'city is required']
     },
     postCode: {
-        type: String,
+        type: Number,
         required:[true,'postCode is required']
     },
     eventStartDate:{
