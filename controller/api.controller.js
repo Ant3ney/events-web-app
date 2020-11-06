@@ -1,6 +1,3 @@
-//load models
-const mongoose =  require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
 const eventModel = require('./../models/event')
 const { validationResult } = require('express-validator');
 const moment = require('moment');
@@ -10,41 +7,19 @@ const constant = require('./../constant');
 const passport = require("passport");
 const here = require("../utilities/here");
 const authUtil = require("../utilities/authentication");
-const apiUtil = require("../utilities/api");
+const apiUtil = require('../utilities/api');
 var util = require('../utilities/api');
 
 const apiController = {
     event:{
-        get:function(req, res, next){
-            eventModel.find({visibility: "public"},'_id name addressLine_1 addressLine_2 region city postCode eventStartDate eventEndDate notes status visibility geocode createdBy country category')
+        get:function(req, res){
+            eventModel.find({visibility: "public"})
             .sort('-eventStartDate')
-            .then((data) => {
-                //returns {data, user} in promise format
-                return(
-                    new Promise((resolve, reject) => {
-                        authUtil.getUserFromJwt(req)
-                        .then((user) => {
-                            if(!user){
-                                reject("No user found");
-                            }
-                            else{
-                                console.log("A user exzists below")
-                                console.log(user);
-                                var dbInfo = {};
-                                dbInfo.data = data;
-                                dbInfo.user = user;
-                                resolve(dbInfo);
-                            }
-                        })
-                        .catch((err) => {
-                            reject(err);
-                        });
-                    }
-                ));            
+            .then((events) => {
+                return(apiUtil.pairEventsAndUser(events, req));            
             })
             .then((dbInfo) => {
-                //If you need to user the argument for something then you canot promise chain
-                var data = dbInfo.data;
+                var data = dbInfo.events;
                 var user = dbInfo.user;
 
                 return new Promise((resolve, reject) => {
@@ -72,7 +47,7 @@ const apiController = {
             .catch(function(err){
                 console.log(err);
                 return res.status(404).json({
-                    message:'Event not added'
+                    message:'Error in geting events from DB'
                 })
             });
         },

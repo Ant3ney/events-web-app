@@ -21,9 +21,18 @@ var authUtil = {
     getUserFromJwt: (req) => {
         var currentJtw = req.cookies['token'];
         return new Promise((resolve, reject) => {
-            authUtil.isCurrentJwtValid(req).then((vJwt) => {
+            authUtil.isCurrentJwtValid(req)
+            .then((vJwt) => {
                return new Promise((resolve, reject) => {
                    User.findOne({jwtApiKey: currentJtw}, (err, user) => {
+                        if(err){
+                            reject({message: 'an error ocoured about: ' + err.message, err: err});
+                            return;
+                        }
+                        else if(!user){
+                            reject({message: 'no user was found from that jwt'});
+                            return;
+                        }   
                         resolve(user);
                    });
                }); 

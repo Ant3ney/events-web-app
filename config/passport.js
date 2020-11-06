@@ -4,6 +4,7 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const JwtStrategy = require('passport-jwt').Strategy;
 const constant = require('../constant')
+const considerLoging = require('../utilities/considerLoging');
 
 //Local authentication
 passport.use(new localStrategy({
@@ -13,17 +14,19 @@ passport.use(new localStrategy({
     //Find out if username and password match
     User.findOne({name: username}, (err, user) => {
         if(err){
-            console.log(err.message);
+            console.error('error happeoned in local auth dbquery');
+            console.error(err.message);
             return done(null, false);
         }
         else if(!user){//means no acount with specified username was found
-            console.log("No user found with that name");
+            console.log("No user found in db with that name");
             return done(null, false);
         }
         var hash = user.passwordHash;
         bcrypt.compare(password, hash, (err, match) => {
             if(err){
-                console.log(err.message);
+                console.error('error happeoned in password comparison');
+                console.error(err.message);
                 return done(err, false);
             }
             else{
@@ -32,6 +35,7 @@ passport.use(new localStrategy({
                     return done(err, user);
                 }
                 else{//Passwords didn't match
+                    console.error('The suplied password was incorrect');
                     return done(err, false);
                 }
             }
@@ -46,7 +50,7 @@ var cookieExtractor = function(req) {
     {
         token = req.cookies['token'];
     }
-    console.log("Token: " + token);
+    considerLoging(console.log("Token: " + token));
     return token;
 };
 
@@ -55,16 +59,28 @@ var opts = {
     secretOrKey: constant.SECRET
 }
 passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-    User.findOne({name: jwt_payload.username}, function(err, user) {
-        if (err) {
-            console.log("Something went wrong");
-            return done(err, false);
-        }
+    var err = {};
+    if(!jwt_payload){
+        err.message = 'jwt dose not have a payload';
+        console.error(err.message);
+        return done(err, false);
+    }
+    else if(jwt_payload && !jwt_payload.username){
+        err.message = 'jwt payload dose not have username';
+        console.error(err.message);
+        return done(err, false);
+    }
+    User.findOne({name: jwt_payload.username})
+    .then((user) => {
         if (user) {
             return done(null, user);
-        } else {
+        } 
+        else {
             return done(null, false);
-            // or you could create a new account
         }
+    })
+    .catch((err) => {
+        console.error('Something went wrong in jwt db query');
+        return done(err, false);
     });
 }));
